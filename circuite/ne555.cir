@@ -1,0 +1,30 @@
+.TITLE PWM_555.sch
+
+.inc uA555.sub
+.MODEL D1n4007 d (IS=7.02767e-09 RS=0.0341512 N=1.80803 EG=1.05743 XTI=5 BV=1000 IBV=5e-08 CJO=1e-11 VJ=0.7 M=0.5 FC=0.5 TT=1e-07 KF=0 AF=1)
+
+X1 0 timingcap output 1 2 timingcap 6 1 UA555
+R4 6      0         10k
+R3 5      3         10k
+R2 4      3         90k
+D2 5      output    D1n4007
+D1 output 4         D1n4007
+C2 0      timingcap 100n  ic=-1.7V
+R1 3      timingcap 1k
+C1 2      0         100n
+V1 1      0         pulse(0 5 0 1u 1u)
+
+.options method=gear reltol=1m minbreak=200ps
+.tran 10u 32ms uic
+
+.control
+  listing e
+  run
+  write pwm_555.raw
+  plot V(output) V(timingcap)
+  rusage all
+* quit
+.endc
+
+.end
+
